@@ -1,41 +1,52 @@
 'use client'
 
-import type { Metadata } from 'next'
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
 import StatusCard from '@/components/StatusCard'
 import ConveyorLine from '@/components/ConveyorLine'
 
+type EquipmentState = 0 | 1 | 2 | 3 | 4;
+
+interface StatusData {
+  state: EquipmentState;
+  runtime: number;
+  outfeed: number;
+  rejects: number
+  rate: number;
+  signalDistribution: {
+    running: number;
+    blocked: number;
+    starved: number;
+    unplannedDowntime: number;
+    plannedDowntime: number;
+  }
+}
+
+interface StatusDataMap {
+  [key: string]: StatusData;
+}
+
 let socket: any;
 
 export default function Dashboard() {
 
-  const [statusData, setStatusData] = useState({});
+  let [statusDataMap, setStatusDataMap] = useState({} as StatusDataMap);
 
   useEffect(() => {
     // Connect to the server
-    socket = io('/', {
+    socket = io('http://localhost:4000', {
       path: '/tag-engine-socket-io'
     });
 
     socket.on('connect', () => {
       console.log('Connected to the server');
-      socket.emit('tagSub', JSON.stringify({ group: 'dashboard', tag: 'status' }));
+      socket.emit('message', 1);
     });
 
     // Listen for status updates
-    socket.on('tagValue', (data: {
-      name: string,
-      group: string,
-      savePeriod: number,
-      metadata: { [key: string]: unknown },
-      value: unknown,
-      ts: number,
-      prevValue: unknown,
-      prevTs: number,
-    }[]) => {
-      console.log('Received status update:', data);
-      setStatusData(data);
+    socket.on('message', (data: StatusDataMap) => {
+      // console.log('Received status update:', data);
+      setStatusDataMap(data);
     });
 
     return () => {
@@ -50,12 +61,12 @@ export default function Dashboard() {
       <div className="absolute top-[20px] left-[100px]">
         <StatusCard
           name="Broadcaster"
-          state={0}
-          runtime="27 sec"
-          outfeed={17}
-          rejects={2}
-          rate={1.5}
-          signalDistribution={{ running: 60, blocked: 20, starved: 15, unplannedDowntime: 5, plannedDowntime: 0 }}
+          state={statusDataMap["Broadcaster"]?.state || 0}
+          runtime={(statusDataMap["Broadcaster"]?.runtime || 0) + ' min'}
+          outfeed={statusDataMap["Broadcaster"]?.outfeed || 0}
+          rejects={statusDataMap["Broadcaster"]?.rejects || 0}
+          rate={statusDataMap["Broadcaster"]?.rate || 0}
+          signalDistribution={statusDataMap["Broadcaster"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
         />
         <ConveyorLine state={2} orientation="horizontal" length={100} className='top-1/2 left-full' />
         <ConveyorLine state={2} orientation="horizontal" length={100} className='top-1/2 right-full' />
@@ -64,12 +75,12 @@ export default function Dashboard() {
       <div className="absolute top-[20px] left-[500px]">
         <StatusCard
           name="Oven"
-          state={4}
-          runtime="37 min"
-          outfeed={13}
-          rejects={0}
-          rate={4.1}
-          signalDistribution={{ running: 60, blocked: 20, starved: 15, unplannedDowntime: 5, plannedDowntime: 0 }}
+          state={statusDataMap["Oven"]?.state || 0}
+          runtime={(statusDataMap["Oven"]?.runtime || 0) + ' min'}
+          outfeed={statusDataMap["Oven"]?.outfeed || 0}
+          rejects={statusDataMap["Oven"]?.rejects || 0}
+          rate={statusDataMap["Oven"]?.rate || 0}
+          signalDistribution={statusDataMap["Oven"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
         />
         <ConveyorLine state={0} orientation="horizontal" length={100} className='top-1/2 left-full' />
       </div>
@@ -77,12 +88,12 @@ export default function Dashboard() {
       <div className="absolute top-[20px] left-[900px]">
         <StatusCard
           name="Calibrator"
-          state={2}
-          runtime="31 min"
-          outfeed={9}
-          rejects={0}
-          rate={1.8}
-          signalDistribution={{ running: 90, blocked: 0, starved: 10, unplannedDowntime: 0, plannedDowntime: 0 }}
+          state={statusDataMap["Calibrator"]?.state || 0}
+          runtime={(statusDataMap["Calibrator"]?.runtime || 0) + ' min'}
+          outfeed={statusDataMap["Calibrator"]?.outfeed || 0}
+          rejects={statusDataMap["Calibrator"]?.rejects || 0}
+          rate={statusDataMap["Calibrator"]?.rate || 0}
+          signalDistribution={statusDataMap["Calibrator"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
         />
         <ConveyorLine state={-1} orientation="horizontal" length={100} className='top-1/2 left-full' />
       </div>
@@ -90,12 +101,12 @@ export default function Dashboard() {
       <div className="absolute top-[300px] left-[100px]">
         <StatusCard
           name="Polisher"
-          state={2}
-          runtime="1.7 hours"
-          outfeed={13}
-          rejects={2}
-          rate={1.7}
-          signalDistribution={{ running: 90, blocked: 0, starved: 10, unplannedDowntime: 20, plannedDowntime: 0 }}
+          state={statusDataMap["Polisher"]?.state || 0}
+          runtime={(statusDataMap["Polisher"]?.runtime || 0) + ' min'}
+          outfeed={statusDataMap["Polisher"]?.outfeed || 0}
+          rejects={statusDataMap["Polisher"]?.rejects || 0}
+          rate={statusDataMap["Polisher"]?.rate || 0}
+          signalDistribution={statusDataMap["Polisher"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
         />
         {/* horizontal line on the left */}
         <ConveyorLine state={-1} orientation="horizontal" length={100} className='top-1/2 right-full' />
@@ -115,12 +126,12 @@ export default function Dashboard() {
       <div className="absolute top-[400px] left-[500px]">
         <StatusCard
           name="UV Oven"
-          state={1}
-          runtime="1.1 min"
-          outfeed={13}
-          rejects={2}
-          rate={1.7}
-          signalDistribution={{ running: 90, blocked: 0, starved: 10, unplannedDowntime: 20, plannedDowntime: 40 }}
+          state={statusDataMap["UV Oven"]?.state || 0}
+          runtime={(statusDataMap["UV Oven"]?.runtime || 0) + ' min'}
+          outfeed={statusDataMap["UV Oven"]?.outfeed || 0}
+          rejects={statusDataMap["UV Oven"]?.rejects || 0}
+          rate={statusDataMap["UV Oven"]?.rate || 0}
+          signalDistribution={statusDataMap["UV Oven"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
         />
         {/* horizontal line on the left */}
         <ConveyorLine state={-1} orientation="horizontal" length={50} className='top-1/2 right-full' />

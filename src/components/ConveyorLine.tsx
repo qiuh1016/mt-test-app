@@ -9,7 +9,14 @@ interface ConveyorLineProps {
   dotStyles?: React.CSSProperties;  // Additional styles for the dot (optional)
 }
 
-export default function ConveyorLine({ state, orientation, length = 100, className, styles, dotStyles }: ConveyorLineProps) {
+export default function ConveyorLine({
+  state,
+  orientation,
+  length = 100,
+  className,
+  styles,
+  dotStyles
+}: ConveyorLineProps) {
   const color = getConveyorColor(state);
   const sizeClass = orientation === 'vertical' ? 'w-2 h-full' : 'w-full h-2';
   return (

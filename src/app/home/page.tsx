@@ -1,8 +1,8 @@
 'use client'
 import { Card, Col, Row } from "antd";
-import ValueDisplayer from "@/components/ValueDisplayer";
 import { useEffect, useState } from 'react';
 import StatusCard from "@/components/StatusCard";
+import ValueDisplayer from "@/components/ValueDisplayer";
 
 export default function Home() {
   // Define state for the value
@@ -25,7 +25,7 @@ export default function Home() {
           name='Oven' state={1} runtime={'27 Sec'} outfeed={100} rejects={5} rate={10}
           signalDistribution={{ running: 50, starved: 50, blocked: 10, unplannedDowntime: 10, plannedDowntime: 10 }} />
       </Col>
-      {/* <Col span={8}>
+      <Col span={8}>
         <Card title="Mash Lauter Tun - Mashing In" className="min-w-60" styles={{ body: { padding: "12px" } }}>
           <ValueDisplayer label="title" value={value} unit={"kPa"} />
           <ValueDisplayer label="title" value={value} unit={"kPa"} />
@@ -37,7 +37,7 @@ export default function Home() {
         <Card title="Default size card" className="min-w-60" styles={{ body: { padding: "12px" } }}>
           <ValueDisplayer label="title" value={value} unit={"%"} />
         </Card>
-      </Col> */}
+      </Col>
     </Row>
   );
 }

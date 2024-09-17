@@ -30,6 +30,7 @@ export default function StatusCard({
 
   const status = getStatusName(state);
   const color = getStatusColor(state);
+  const signalDistributionTotal = Object.values(signalDistribution).reduce((acc, curr) => acc + curr, 0);
 
   return (
     <div className="bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] shadow-md z-10">
@@ -56,11 +57,11 @@ export default function StatusCard({
       <div>
         <p className="text-sm font-medium text-center mb-2"><SignalFilled /> SIGNALS</p>
         <div className="flex h-4 rounded-full overflow-hidden">
-          <div className="bg-green-500" style={{ width: `${signalDistribution.running}%` }}></div>
-          <div className="bg-yellow-300" style={{ width: `${signalDistribution.starved}%` }}></div>
-          <div className="bg-orange-400" style={{ width: `${signalDistribution.blocked}%` }}></div>
-          <div className="bg-red-500" style={{ width: `${signalDistribution.unplannedDowntime}%` }}></div>
-          <div className="bg-neutral-300" style={{ width: `${signalDistribution.plannedDowntime}%` }}></div>
+          <div className="bg-green-500" style={{ width: `${signalDistribution.running / signalDistributionTotal * 100}%` }}></div>
+          <div className="bg-yellow-300" style={{ width: `${signalDistribution.starved / signalDistributionTotal * 100}%` }}></div>
+          <div className="bg-orange-400" style={{ width: `${signalDistribution.blocked / signalDistributionTotal * 100}%` }}></div>
+          <div className="bg-red-500" style={{ width: `${signalDistribution.unplannedDowntime / signalDistributionTotal * 100}%` }}></div>
+          <div className="bg-neutral-300" style={{ width: `${signalDistribution.plannedDowntime / signalDistributionTotal * 100}%` }}></div>
         </div>
       </div>
     </div>
@@ -95,7 +96,7 @@ function getStatusName(state: number) {
     case 3:
       return 'Planned DT';
     case 4:
-      return 'starved';
+      return 'Starved';
     default:
       return 'Unknown';
   }

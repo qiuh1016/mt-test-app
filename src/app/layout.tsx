@@ -2,10 +2,10 @@
 
 import localFont from "next/font/local";
 import "./globals.css";
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Menu, theme } from 'antd';
+const { Header, Content, Sider } = Layout;
 import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined, HomeFilled, ExperimentFilled, WarningFilled } from '@ant-design/icons';
+import { NotificationOutlined, HomeFilled, ExperimentFilled, WarningFilled } from '@ant-design/icons';
 import { useRouter } from 'next/navigation';
 
 const geistSans = localFont({
