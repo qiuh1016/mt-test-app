@@ -7,18 +7,24 @@ interface StatusCardProps {
   top?: number;
   left?: number;
   name: string;
-  state: number;
-  runtime: string;
+  statusData: StatusData;
+}
+
+type EquipmentState = 0 | 1 | 2 | 3 | 4;
+
+export interface StatusData {
+  state: EquipmentState;
+  runtime: number;
   outfeed: number;
-  rejects: number;
-  rate: number;  // per hour
+  rejects: number
+  rate: number;
   signalDistribution: {
     running: number;
+    blocked: number;
     starved: number;
-    blocked: number,
-    unplannedDowntime: number,
-    plannedDowntime: number
-  };
+    unplannedDowntime: number;
+    plannedDowntime: number;
+  }
 }
 
 export default function StatusCard({
@@ -26,15 +32,17 @@ export default function StatusCard({
   top,
   left,
   name,
-  state,
-  runtime,
-  outfeed,
-  rejects,
-  rate,
-  signalDistribution: signals,
+  statusData: {
+    state,
+    runtime,
+    outfeed,
+    rejects,
+    rate,
+    signalDistribution: signals,
+  }
 }: StatusCardProps) {
 
-  const status = getStatusName(state);
+  const status = getStatusName(state as number);
   const color = getStatusColor(state);
   const signalTotal = Object.values(signals).reduce((acc, curr) => acc + curr, 0);
 

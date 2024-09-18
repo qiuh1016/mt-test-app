@@ -21,9 +21,7 @@ export default function Home() {
   return (
     <Row className="p-4" gutter={16}>
       <Col span={8}>
-        <StatusCard
-          name='Oven' state={1} runtime={'27 Sec'} outfeed={100} rejects={5} rate={10}
-          signalDistribution={{ running: 50, starved: 50, blocked: 10, unplannedDowntime: 10, plannedDowntime: 10 }} />
+      
       </Col>
       <Col span={8}>
         <Card title="Mash Lauter Tun - Mashing In" className="min-w-60" styles={{ body: { padding: "12px" } }}>
