@@ -20,7 +20,7 @@ export default function ConveyorLine({
   const sizeClass = orientation === 'vertical' ? 'w-2 h-full' : 'w-full h-2';
   return (
     <div
-      className={`${className} absolute bg-gray-400 ${sizeClass} rounded flex items-center justify-center`}
+      className={`${className ?? ''} absolute bg-gray-400 rounded flex items-center justify-center`}
       style={{
         height: orientation === 'vertical' ? `${length}px` : '1px',
         width: orientation === 'horizontal' ? `${length}px` : '1px',

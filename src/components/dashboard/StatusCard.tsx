@@ -4,6 +4,8 @@ import { SignalFilled } from '@ant-design/icons';
 
 interface StatusCardProps {
   className?: string;
+  top?: number;
+  left?: number;
   name: string;
   state: number;
   runtime: string;
@@ -21,21 +23,25 @@ interface StatusCardProps {
 
 export default function StatusCard({
   className,
+  top,
+  left,
   name,
   state,
   runtime,
   outfeed,
   rejects,
   rate,
-  signalDistribution,
+  signalDistribution: signals,
 }: StatusCardProps) {
 
   const status = getStatusName(state);
   const color = getStatusColor(state);
-  const signalDistributionTotal = Object.values(signalDistribution).reduce((acc, curr) => acc + curr, 0);
+  const signalTotal = Object.values(signals).reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div className={`${className} bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10`}>
+    <div className={`${className ?? ''} bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10`}
+      style={{ top: `${top ?? 0}px`, left: `${left ?? 0}px` }}
+    >
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
@@ -59,11 +65,11 @@ export default function StatusCard({
       <div>
         <p className="text-sm font-medium text-center mb-2"><SignalFilled /> SIGNALS</p>
         <div className="flex h-4 rounded-full overflow-hidden">
-          <div className="bg-green-500" style={{ width: `${signalDistribution.running / signalDistributionTotal * 100}%` }}></div>
-          <div className="bg-yellow-300" style={{ width: `${signalDistribution.starved / signalDistributionTotal * 100}%` }}></div>
-          <div className="bg-orange-400" style={{ width: `${signalDistribution.blocked / signalDistributionTotal * 100}%` }}></div>
-          <div className="bg-red-500" style={{ width: `${signalDistribution.unplannedDowntime / signalDistributionTotal * 100}%` }}></div>
-          <div className="bg-neutral-300" style={{ width: `${signalDistribution.plannedDowntime / signalDistributionTotal * 100}%` }}></div>
+          <div className="bg-green-500" style={{ width: `${signals.running / signalTotal * 100}%` }}></div>
+          <div className="bg-yellow-300" style={{ width: `${signals.starved / signalTotal * 100}%` }}></div>
+          <div className="bg-orange-400" style={{ width: `${signals.blocked / signalTotal * 100}%` }}></div>
+          <div className="bg-red-500" style={{ width: `${signals.unplannedDowntime / signalTotal * 100}%` }}></div>
+          <div className="bg-neutral-300" style={{ width: `${signals.plannedDowntime / signalTotal * 100}%` }}></div>
         </div>
       </div>
     </div>

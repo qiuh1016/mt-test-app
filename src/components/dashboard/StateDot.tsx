@@ -15,7 +15,7 @@ export default function ConveyorLine({
 }: ConveyorLineProps) {
   const color = getColor(state);
   return (
-    <div className={`absolute w-5 h-5 rounded-full ${color} ${className}`}
+    <div className={`${className ?? ''} absolute w-5 h-5 rounded-full ${color}`}
       style={{ top: `calc(${top ?? 0}px - 0.625rem)`, left: `calc(${left ?? 0}px - 0.625rem)` }}></div>
   );
 }

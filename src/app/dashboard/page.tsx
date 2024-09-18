@@ -61,7 +61,9 @@ export default function Dashboard() {
     <div className="relative h-full w-full">
       {/* Top Row */}
       <StatusCard
-        className="absolute top-[20px] left-[100px]"
+        className="absolute"
+        top={20}
+        left={100}
         name="Broadcaster"
         state={statusDataMap["Broadcaster"]?.state || 0}
         runtime={(statusDataMap["Broadcaster"]?.runtime || 0) + ' min'}
@@ -72,7 +74,9 @@ export default function Dashboard() {
       />
 
       <StatusCard
-        className="absolute top-[20px] left-[500px]"
+        className="absolute"
+        top={20}
+        left={500}
         name="Oven"
         state={statusDataMap["Oven"]?.state || 0}
         runtime={(statusDataMap["Oven"]?.runtime || 0) + ' min'}
@@ -83,7 +87,9 @@ export default function Dashboard() {
       />
 
       <StatusCard
-        className="absolute top-[20px] left-[900px]"
+        className="absolute"
+        top={20}
+        left={900}
         name="Calibrator"
         state={statusDataMap["Calibrator"]?.state || 0}
         runtime={(statusDataMap["Calibrator"]?.runtime || 0) + ' min'}
@@ -94,7 +100,9 @@ export default function Dashboard() {
       />
 
       <StatusCard
-        className="absolute top-[300px] left-[100px]"
+        className="absolute"
+        top={300}
+        left={100}
         name="Polisher"
         state={statusDataMap["Polisher"]?.state || 0}
         runtime={(statusDataMap["Polisher"]?.runtime || 0) + ' min'}
@@ -105,7 +113,9 @@ export default function Dashboard() {
       />
 
       <StatusCard
-        className="absolute top-[400px] left-[500px]"
+        className="absolute"
+        top={400}
+        left={500}
         name="UV Oven"
         state={statusDataMap["UV Oven"]?.state || 0}
         runtime={(statusDataMap["UV Oven"]?.runtime || 0) + ' min'}
@@ -115,7 +125,7 @@ export default function Dashboard() {
         signalDistribution={statusDataMap["UV Oven"]?.signalDistribution || { running: 0, blocked: 0, starved: 0, unplannedDowntime: 0, plannedDowntime: 0 }}
       />
 
-      <ConveyorLine orientation="horizontal" length={1300} top={20 + 100} left={0} />
+      <ConveyorLine orientation="horizontal" length={1300} top={120} left={0} />
 
       <ConveyorLine orientation="horizontal" length={450} top={400} left={0} />
       <ConveyorLine orientation="horizontal" length={450} top={400} left={850} />
