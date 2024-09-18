@@ -4,7 +4,7 @@ const createServer = require('http').createServer;
 const SocketIOServer = require('socket.io').Server;
 
 // Create a basic HTTP server
-let server, io, allowedOrigins = [];
+let server, io, allowedOrigins = ["http://127.0.0.1:3000"];
 
 // Create a new instance of Socket.IO server
 io = createIoServer(server, allowedOrigins);
@@ -69,9 +69,9 @@ function updateAllowedOrigins(newOrigins) {
 }
 
 // Example of dynamically updating allowed origins
-setTimeout(() => {
-  updateAllowedOrigins(["http://127.0.0.1:3000"]);
-}, 10000); // Update allowed origins after 10 seconds
+// setTimeout(() => {
+//   updateAllowedOrigins(["http://127.0.0.1:3000"]);
+// }, 10000); // Update allowed origins after 10 seconds
 
 
 function mockStatus() {
@@ -85,11 +85,11 @@ function mockStatus() {
       rejects: Math.round(Math.random() * 5),
       rate: Math.round(Math.random() * 40) / 10,
       signalDistribution: {
-        running: Math.round(Math.random() * 40),
-        blocked: Math.round(Math.random() * 30),
+        running: Math.round(50 + Math.random() * 30),
+        blocked: Math.round(Math.random() * 10),
         starved: Math.round(Math.random() * 20),
         unplannedDowntime: Math.round(Math.random() * 5),
-        plannedDowntime: Math.round(Math.random() * 2)
+        plannedDowntime: Math.round(Math.random() * 10)
       }
     }
   }

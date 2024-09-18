@@ -3,6 +3,7 @@ import VerticalValueDisplayer from '../VerticalValueDisplayer';
 import { SignalFilled } from '@ant-design/icons';
 
 interface StatusCardProps {
+  className?: string;
   name: string;
   state: number;
   runtime: string;
@@ -19,6 +20,7 @@ interface StatusCardProps {
 }
 
 export default function StatusCard({
+  className,
   name,
   state,
   runtime,
@@ -33,7 +35,7 @@ export default function StatusCard({
   const signalDistributionTotal = Object.values(signalDistribution).reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10">
+    <div className={`${className} bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10`}>
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">
