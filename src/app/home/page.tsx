@@ -1,7 +1,7 @@
 'use client'
 import { Card, Col, Row } from "antd";
 import { useEffect, useState } from 'react';
-import StatusCard from "@/components/StatusCard";
+import StatusCard from "@/components/dashboard/StatusCard";
 import ValueDisplayer from "@/components/ValueDisplayer";
 
 export default function Home() {

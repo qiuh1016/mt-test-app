@@ -1,5 +1,6 @@
 'use client';
 
+import { usePathname } from 'next/navigation'
 import localFont from "next/font/local";
 import "./globals.css";
 import { Layout, Menu, theme } from 'antd';
@@ -76,6 +77,8 @@ export default function RootLayout({
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
 
+  const defaultSelectKeys = [usePathname()]
+
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
@@ -91,7 +94,7 @@ export default function RootLayout({
             <Sider style={{ background: "colorBgContainer" }} width={200}>
               <Menu
                 mode="inline"
-                defaultSelectedKeys={['/home']}
+                defaultSelectedKeys={defaultSelectKeys}
                 defaultOpenKeys={[]}
                 className="h-full"
                 items={siderItems}

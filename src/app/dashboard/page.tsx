@@ -2,8 +2,9 @@
 
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import StatusCard from '@/components/StatusCard'
-import ConveyorLine from '@/components/ConveyorLine'
+import StatusCard from '@/components/dashboard/StatusCard'
+import ConveyorLine from '@/components/dashboard/ConveyorLine'
+import Legend from '@/components/dashboard/Legend'
 
 type EquipmentState = 0 | 1 | 2 | 3 | 4;
 
@@ -56,7 +57,7 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <div className="relative">
+    <div className="relative h-full w-full">
       {/* Top Row */}
       <div className="absolute top-[20px] left-[100px]">
         <StatusCard
@@ -154,6 +155,9 @@ export default function Dashboard() {
 
         <h3 className='absolute text-xl font-semibold px-2' style={{ right: -230, top: -15, backgroundColor: '#fff' }}>Store</h3>
       </div>
+
+      <Legend className="absolute bottom-2 right-2">
+      </Legend>
     </div>
   );
 }

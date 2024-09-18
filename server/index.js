@@ -4,63 +4,74 @@ const createServer = require('http').createServer;
 const SocketIOServer = require('socket.io').Server;
 
 // Create a basic HTTP server
-const server = createServer();
-
-let allowedOrigins = [];
+let server, io, allowedOrigins = [];
 
 // Create a new instance of Socket.IO server
-const io = new SocketIOServer(server, {
-  path: '/tag-engine-socket-io',
-  cors: {
-    // origin: "http://127.0.0.1:3000", // Change this to your frontend URL in production, e.g., "http://localhost:3000"
-    origin: (origin, callback) => {
-      // Allow the request if the origin is in the allowedOrigins list
-      if (allowedOrigins.includes(origin) || !origin) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
+io = createIoServer(server, allowedOrigins);
+
+function createIoServer(server, allowedOrigins) {
+  // shutdown the existing server
+  if (io) {
+    io.close();
+    if (io.timer) clearInterval(io.timer);
+  }
+
+  if (server) {
+    server.close();
+  }
+
+  server = createServer();
+  // Start the server
+  const PORT = process.env.PORT || 4000;
+  server.listen(PORT, () => {
+    console.log(`Socket.IO server running on port ${PORT}`);
+  });
+
+  // Create a new instance of Socket.IO server
+  io = new SocketIOServer(server, {
+    path: '/tag-engine-socket-io',
+    cors: {
+      origin: allowedOrigins,
+      methods: ["GET", "POST"],
     },
-    methods: ["GET", "POST"],
-  },
-});
+  });
+
+
+  io.timer = setInterval(() => {
+    if (io && io.emit) io.emit('message', mockStatus());
+  }, 3000);
+
+  // Listen for socket connections
+  io.on('connection', (socket) => {
+    console.log('A client connected:', socket.id);
+
+    // Listen for custom events
+    socket.on('message', (data) => {
+      console.log('Message received:', data);
+      // Broadcast message to all clients
+      socket.emit('message', mockStatus());
+    });
+
+    socket.on('disconnect', () => {
+      console.log('Client disconnected:', socket.id);
+    });
+  });
+
+  return io;
+}
+
 
 // Function to update allowed origins dynamically
 function updateAllowedOrigins(newOrigins) {
   allowedOrigins = newOrigins;
   console.log('Allowed origins updated:', allowedOrigins);
+  io = createIoServer(server, allowedOrigins);
 }
 
 // Example of dynamically updating allowed origins
 setTimeout(() => {
-  updateAllowedOrigins(['http://localhost:3000', 'https://myapp.com']);
+  updateAllowedOrigins(["http://127.0.0.1:3000"]);
 }, 10000); // Update allowed origins after 10 seconds
-
-// Listen for socket connections
-io.on('connection', (socket) => {
-  console.log('A client connected:', socket.id);
-
-  // Listen for custom events
-  socket.on('message', (data) => {
-    console.log('Message received:', data);
-    // Broadcast message to all clients
-    socket.emit('message', mockStatus());
-  });
-
-  setInterval(() => {
-    io.emit('message', mockStatus());
-  }, 3000);
-
-  socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id);
-  });
-});
-
-// Start the server
-const PORT = process.env.PORT || 4000;
-server.listen(PORT, () => {
-  console.log(`Socket.IO server running on port ${PORT}`);
-});
 
 
 function mockStatus() {
@@ -85,3 +96,11 @@ function mockStatus() {
 
   return status;
 }
+
+// Graceful shutdown
+process.on('SIGINT', () => {
+  console.log('Shutting down server...');
+  if (io) io.close();
+  if (server) server.close();
+  process.exit(0);
+});

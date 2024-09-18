@@ -1,5 +1,5 @@
 import React from 'react';
-import VerticalValueDisplayer from './VerticalValueDisplayer';
+import VerticalValueDisplayer from '../VerticalValueDisplayer';
 import { SignalFilled } from '@ant-design/icons';
 
 interface StatusCardProps {
@@ -33,7 +33,7 @@ export default function StatusCard({
   const signalDistributionTotal = Object.values(signalDistribution).reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div className="bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] shadow-md z-10">
+    <div className="bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10">
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center">

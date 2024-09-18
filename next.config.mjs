@@ -10,6 +10,16 @@ const nextConfig = {
 
   // Optional: Change the output directory `out` -> `dist`
   // distDir: 'dist',
+  
+  async redirects() {
+    return [
+      {
+        source: '/',
+        destination: '/dashboard',
+        permanent: true, // or false for a temporary redirect
+      },
+    ];
+  },
 };
 
 export default nextConfig;
