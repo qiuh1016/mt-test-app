@@ -29,11 +29,11 @@ function createIoServer(server, allowedOrigins) {
 
   // Create a new instance of Socket.IO server
   io = new SocketIOServer(server, {
+    // cors: {
+    //   origin: '*',
+    //   methods: ['GET', 'POST'],
+    // },
     path: '/tag-engine-socket-io',
-    cors: {
-      origin: allowedOrigins,
-      methods: ["GET", "POST"],
-    },
   });
 
 

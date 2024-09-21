@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Socket.IO Client</title>
+    <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"
+      integrity="sha384-2huaZvOR9iDzHqslqwpR87isEmrfxqyWOF7hr7BY6KG0+hVKLoEXMPUJw3ynWuhO"
+      crossorigin="anonymous"></script>
+  </head>
+  <body>
+    <h1>Socket.IO Client</h1>
+    <button id="subscribe1">Subscribe to 1</button>
+    <button id="subscribe2">subscribe to 2</button>
+    <button id="unsubscribe1">Unsubscribe from 1</button>
+    <button id="unsubscribe2">Unsubscribe from 2</button>
+    <button id="updateSub2">update subscription only to 2</button>
+    <button id="unsubAll">Unsubscribe from 1 and 2</button>
+    <div id="value"></div>
+
+    <script>
+    const socket = io('127.0.0.1:1881', {
+      path: '/tag-engine-socket-io'
+    });
+
+    const tagName = 'HLT:vlvPos_PV';
+
+    function clearValue() {
+      document.getElementById('value').innerHTML = '';
+    }
+
+    document.getElementById('subscribe1').onclick = () => {
+      socket.emit('sub', 'dashboard:status');
+      clearValue();
+    };
+
+    document.getElementById('subscribe2').onclick = () => {
+      socket.emit('sub', 'HLT:vlvPos_SP');
+      clearValue();
+    };
+
+    document.getElementById('unsubscribe1').onclick = () => {
+      socket.emit('unsub', 'HLT:vlvPos_PV');
+      clearValue();
+    };
+
+    document.getElementById('unsubscribe2').onclick = () => {
+      socket.emit('unsub', 'HLT:vlvPos_SP');
+      clearValue();
+    };
+
+    document.getElementById('updateSub2').onclick = () => {
+      socket.emit('updateSub', 'HLT:vlvPos_SP');
+      clearValue();
+    };
+
+    document.getElementById('unsubAll').onclick = () => {
+      socket.emit('unsubAll');
+      clearValue();
+    };
+
+    socket.on('connect', () => {
+      console.log('Connected to server');
+      // socket.emit('tagSub', 'HLT:vlvPos_PV');
+    }); 
+
+    socket.on('value', (data) => {
+      console.log('Received data:', data);
+      
+      const updatesDiv = document.getElementById('value');
+
+      updatesDiv.innerHTML = `<p>${JSON.stringify(data, null, 2)}</p>`;
+    });
+  </script>
+  </body>
+</html>

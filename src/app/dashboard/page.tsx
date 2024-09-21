@@ -1,11 +1,22 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import io, { Socket } from 'socket.io-client';
 import StatusCard, { StatusData } from '@/components/dashboard/StatusCard'
 import ConveyorLine from '@/components/dashboard/ConveyorLine'
 import StateDot from '@/components/dashboard/StateDot'
 import Legend from '@/components/dashboard/Legend'
+
+interface TagInfo {
+  name: string,
+  group: string,
+  savePeriod: number,
+  metadata: { [key: string]: unknown },
+  value: unknown,
+  ts: number,
+  prevValue: unknown,
+  prevTs: number,
+}
 
 interface StatusDataMap {
   [key: string]: StatusData;
@@ -26,11 +37,11 @@ const defaultStatusData: StatusData = {
   }
 };
 
-let socket: any;
+let socket: Socket;
 
 export default function Dashboard() {
 
-  let [statusDataMap, setStatusDataMap] = useState({} as StatusDataMap);
+  const [statusDataMap, setStatusDataMap] = useState({} as StatusDataMap);
 
   const equitments = [{
     name: "Broadcaster",
@@ -134,24 +145,27 @@ export default function Dashboard() {
 
   useEffect(() => {
     // Connect to the server
-    socket = io('http://localhost:4000', {
+    socket = io('/', {
       path: '/tag-engine-socket-io'
     });
 
     socket.on('connect', () => {
       console.log('Connected to the server');
-      socket.emit('message', 1);
+      socket.emit('sub', 'dashboard:status');
     });
 
     // Listen for status updates
-    socket.on('message', (data: StatusDataMap) => {
-      // console.log('Received status update:', data);
-      setStatusDataMap(data);
+    socket.on('value', (tagInfos: TagInfo[]) => {
+      const data = tagInfos
+        .find(tagInfo => tagInfo.group === 'dashboard' && tagInfo.name === 'status')?.value;
+      const statusDataMap = JSON.parse(data as string) as StatusDataMap
+      setStatusDataMap(statusDataMap);
     });
 
     return () => {
       // Clean up the socket connection
-      if (socket) socket.disconnect();
+      console.log('Disconnecting from the server');
+      if (socket) socket.close();
     };
   }, []);
 

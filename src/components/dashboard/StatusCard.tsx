@@ -47,7 +47,7 @@ export default function StatusCard({
   const signalTotal = Object.values(signals).reduce((acc, curr) => acc + curr, 0);
 
   return (
-    <div className={`${className ?? ''} bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10`}
+    <div className={`${className ?? ''} bg-white rounded-lg shadow-lg p-4 w-[300px] h-[200px] z-10 border border-neutral-300`}
       style={{ top: `${top ?? 0}px`, left: `${left ?? 0}px` }}
     >
       {/* Header */}

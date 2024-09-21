@@ -17,7 +17,6 @@ export default function ConveyorLine({
   top,
   left,
 }: ConveyorLineProps) {
-  const sizeClass = orientation === 'vertical' ? 'w-2 h-full' : 'w-full h-2';
   return (
     <div
       className={`${className ?? ''} absolute bg-gray-400 rounded flex items-center justify-center`}
